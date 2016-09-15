@@ -44,6 +44,8 @@ averageByHourOfDayAndMonth <- function(irradiance) {
 # total irradiance for each month
 totalByMonth <- function(irradiance) {
 
+	irradiance <- averageByHourOfDayAndMonth(irradiance)
+
 	sumByMonth <- aggregate(cbind(DIFFUSED,DIRECT) ~ MONTH, data = irradiance, FUN = sum)
 	# sumByMonth <- aggregate(
 	# irradiance[,c("DIFFUSED","DIRECT"), drop=FALSE],
@@ -124,7 +126,7 @@ calculateIrradiance <- function(path, plotData) {
 		#		avgsByHourInYear <- averageByHourInYear(irradiance)
 		#		avgsByDayInYear <- averageByDayInYear(irradiance)
 
-		# average irradiance for each hour of the day in month
+		# average irradiance for each hour of the day in month		
 		avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
 		#aprilData <- subset(avgsByHourOfDayAndMonth, MONTH=4)
 		if (plotData) {
