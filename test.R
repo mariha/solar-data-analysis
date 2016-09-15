@@ -76,14 +76,16 @@ inData <- readSingleFile("tests/sampleLeapYear.in.txt")
 irradiance <- extractIrradianceData(inData)
 
 # todo: leap year
-avgsByHourInYear <- averageByHourInYear(irradiance)
-avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
+#	avgsByHourInYear <- averageByHourInYear(irradiance)
+#	avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
 sumByMonth <- totalByMonth(irradiance)
+#	write.csv2(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
 
-# actualOutData <- avgsByHourInYear
-# expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
+#	actualOutData <- avgsByHourInYear
+actualOutData <- sumByMonth
+expectedOutData <- readSingleFile("tests/sample.out_leapYear.txt")
 
-# results[i<-i+1] <- compare("leap year", actualOutData, expectedOutData)
+results[i<-i+1] <- compare("leap year", actualOutData, expectedOutData)
 
 # TEST: time shift
 # todo: time shift
