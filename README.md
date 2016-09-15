@@ -1,11 +1,12 @@
- solar-data-analysis
-========================================================================
+solar-data-analysis
+===================
 
 Data source: ftp://ftp-cdc.dwd.de/pub/CDC/observations_germany/climate/hourly/solar/
 Source code: https://github.com/marycha/solar-data-analysis
 
- Program structure
-------------------------------------------------------------------------
+
+Program structure
+-----------------
 * `run.R` - invokes main source code
 * `solar.R` - main source code
 * `test.R` - tests code
@@ -15,8 +16,8 @@ Source code: https://github.com/marycha/solar-data-analysis
 * `unzip/*` - intermediate input directory (once filled with unzipped files, we can reuse it and skip unzip phase)
 
 
- To run the program:
-------------------------------------------------------------------------
+To run the program:
+-------------------
 1. Install R: https://www.r-project.org/
 1. Clone or download the code from GitHub repository to your working directory `.`
 1. Save zip files from datasource to `./database`
