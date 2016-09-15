@@ -169,8 +169,8 @@ calculateIrradiance <- function(path, plotData) {
 		}
 
 		# print to files
-		write.csv2(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
-		write.csv2(sumByMonth, paste(outputDir, 'totalByMonth.csv', sep="/"))
-		write.csv2(otherData, paste(outputDir, 'otherData.csv', sep="/"))
+	write.csv(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
+	write.csv(sumByMonth, paste(outputDir, 'totalByMonth.csv', sep="/"))
+	write.csv(otherData, paste(outputDir, 'otherData.csv', sep="/"))
 	}
 }
