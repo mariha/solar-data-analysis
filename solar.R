@@ -101,16 +101,14 @@ readSingleFile <- function(fileName, colClasses = NA) {
 
 calculateIrradiance <- function(path, plotData) {
 	# unzip all files
-	# files <- list.files(path=paste(path,'database', sep="/"), pattern=".*\\.zip$", full.names=TRUE, recursive=FALSE)
-	# for (fileName in files) {
-	# unzip(fileName, exdir = "./unzip")
-	# }
+	#files <- list.files(path=paste(path,'database', sep="/"), pattern=".*\\.zip$", full.names=TRUE, recursive=FALSE)
+	#for (fileName in files) {
+	#	unzip(fileName, exdir = "./unzip")
+	#}
 
 	# list all data files
-	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*\\.txt$", full.names=TRUE, recursive=FALSE)
-	#	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*01594\\.txt$", full.names=TRUE, recursive=FALSE)
-	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*03946\\.txt$", full.names=TRUE, recursive=FALSE)
-	#	print(files)
+	# files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*\\.txt$", full.names=TRUE, recursive=FALSE)
+	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*03987\\.txt$", full.names=TRUE, recursive=FALSE)
 
 	for (fileName in files) {
 
@@ -126,7 +124,7 @@ calculateIrradiance <- function(path, plotData) {
 		#		avgsByHourInYear <- averageByHourInYear(irradiance)
 		#		avgsByDayInYear <- averageByDayInYear(irradiance)
 
-		# average irradiance for each hour of the day in month		
+		# average irradiance for each hour of the day in month
 		avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
 		#aprilData <- subset(avgsByHourOfDayAndMonth, MONTH=4)
 		if (plotData) {
@@ -174,5 +172,3 @@ calculateIrradiance <- function(path, plotData) {
 		write.csv2(otherData, paste(outputDir, 'otherData.csv', sep="/"))
 	}
 }
-
-calculateIrradiance(getwd(), TRUE)
