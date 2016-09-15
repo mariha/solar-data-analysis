@@ -1,0 +1,11 @@
+IRRADIANCE; MONTH; 1986; 1987; 1988
+ DIFFUSED;    1;     0;    0;    0
+   DIRECT;    1;     0;    0;    0
+ DIFFUSED;    2;    31;    ?;    ?
+   DIRECT;    2;     0;    ?;    ?
+ DIFFUSED;    3;     0;    0;    ?
+   DIRECT;    3;     0;    0;    ?
+ DIFFUSED;    4;   280;  106;    ?
+   DIRECT;    4;    40;   56;    ?
+ DIFFUSED;   12;     0;    0;    ?
+   DIRECT;   12;     0;    0;    ?

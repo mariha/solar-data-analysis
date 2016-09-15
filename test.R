@@ -1,23 +1,23 @@
 source("solar.R")
 
 compare <- function(testName, actual, expected){
-    result <- all.equal(expected, actual, tolerance=0.01, check.attributes=FALSE, check.names=TRUE)
-    if (!isTRUE(result)){
-        print("")
-        print(result)
-        print(paste("TEST NAME: ", testName))
+	result <- all.equal(expected, actual, tolerance=0.01, check.attributes=FALSE, check.names=TRUE)
+	if (!isTRUE(result)){
+		print("")
+		print(result)
+		print(paste("TEST NAME: ", testName))
 
-        print("expected:")
-        print(expected)
-        print("actual:")
-        print(actual)
+		print("expected:")
+		print(expected)
+		print("actual:")
+		print(actual)
 
-        print("expected:")
-        str(expected)
-        print("actual:")
-        str(actual)
-        result <- testName
-    }
+		print("expected:")
+		str(expected)
+		print("actual:")
+		str(actual)
+		result <- testName
+	}
 }
 
 #------------------------------------------------------------------------------
@@ -130,13 +130,25 @@ print(sumByMonth)
 
 # results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
 
+# TEST: total irradiance for each month in each year
+
+inData <- readSingleFile("tests/sample.in.txt")
+irradiance <- extractIrradianceData(inData)
+
+sumByMonthInYears <- totalByMonthInYears(irradiance)
+
+actualOutData <- sumByMonthInYears
+expectedOutData <- readSingleFile("tests/sample.out_sums_by_month_in_years.txt")
+
+results[i<-i+1] <- compare("total irradiance for each month in each year", actualOutData, expectedOutData)
+
 #------------------------------------------------------------------------------
 
 print("")
 if (length(results) == 0L) {
-    print("ALL TESTS PASSED")
+	print("ALL TESTS PASSED")
 } else {
-    print("FAILED TESTS:")
+	print("FAILED TESTS:")
 print(results)
 }
 

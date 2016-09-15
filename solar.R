@@ -56,6 +56,26 @@ totalByMonth <- function(irradiance) {
 }
 
 
+# total irradiance for each month in each year
+totalByMonthAndYear <- function(irradiance) {
+
+	# sum by month and year
+	sumByMonthAndYear <- aggregate(cbind(DIFFUSED,DIRECT) ~ MONTH + YEAR, data = irradiance, FUN = sum)
+
+	# transform DIFFUSED and DIRECT columns into IRRADIANCE [type] and [irradiance] value columns
+	sumByMonthAndYear <- melt(sumByMonthAndYear, measure.vars=c("DIFFUSED","DIRECT"), variable_name="IRRADIANCE")
+}
+
+totalByMonthInYears <- function(irradiance) {
+	sumByMonthAndYear <- totalByMonthAndYear(irradiance)
+
+	# pivot by year
+	sumByMonthInYears <- cast(sumByMonthAndYear, IRRADIANCE + MONTH ~ YEAR, value="VALUE")
+
+	# sort by month and irradiance type
+	sumByMonthInYears <- sumByMonthInYears[ order(sumByMonthInYears$MONTH, sumByMonthInYears$IRRADIANCE), ]
+}
+
 extractIrradianceData <- function(inData) {
 	dateTimes <- as.POSIXlt(strptime(inData$MESS_DATUM_WOZ, format='%Y%m%d%H:%M')) # 2016063023:00
 
@@ -103,14 +123,14 @@ readSingleFile <- function(fileName, colClasses = NA) {
 
 calculateIrradiance <- function(path, plotData) {
 	# unzip all files
-	#files <- list.files(path=paste(path,'database', sep="/"), pattern=".*\\.zip$", full.names=TRUE, recursive=FALSE)
-	#for (fileName in files) {
-	#	unzip(fileName, exdir = "./unzip")
-	#}
+	# files <- list.files(path=paste(path,'database', sep="/"), pattern=".*\\.zip$", full.names=TRUE, recursive=FALSE)
+	# for (fileName in files) {
+	# unzip(fileName, exdir = "./unzip")
+	# }
 
 	# list all data files
-	# files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*\\.txt$", full.names=TRUE, recursive=FALSE)
-	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*03987\\.txt$", full.names=TRUE, recursive=FALSE)
+	#	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*\\.txt$", full.names=TRUE, recursive=FALSE)
+	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*03987\\.txt$", full.names=TRUE, recursive=FALSE)  # Berlin
 
 	for (fileName in files) {
 
@@ -122,13 +142,11 @@ calculateIrradiance <- function(path, plotData) {
 		outputDir <- paste(".", "output", paste(otherData$STATION, dataInterval), sep="/")
 		dir.create(outputDir, recursive = TRUE)
 
-		# average irradiance for each hour in year
-		#		avgsByHourInYear <- averageByHourInYear(irradiance)
+		# average irradiance for each day in year
 		#		avgsByDayInYear <- averageByDayInYear(irradiance)
 
 		# average irradiance for each hour of the day in month		
 		avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
-		#aprilData <- subset(avgsByHourOfDayAndMonth, MONTH=4)
 		if (plotData) {
 			p <- ggplot(avgsByHourOfDayAndMonth, aes(x=HOUR_IN_DAY)) +
 
@@ -168,9 +186,32 @@ calculateIrradiance <- function(path, plotData) {
 			dev.off()
 		}
 
+		# average irradiance for each month in each year
+		sumByMonthInYears <- totalByMonthInYears(irradiance)
+		if (plotData) {
+			sumByMonthAndYear <- totalByMonthAndYear(irradiance)
+			#sumByMonthAndYear$YEAR <- sumByMonthAndYear$YEAR %/% 5 * 5
+			sumByMonthAndYear <- aggregate(value ~ IRRADIANCE + MONTH + YEAR, data = sumByMonthAndYear, FUN = mean)
+			sumByMonthAndYear <- subset(sumByMonthAndYear, IRRADIANCE=="DIFFUSED")
+
+			p <- ggplot(sumByMonthAndYear, aes(x=MONTH)) +
+
+			geom_line(aes(y=value, colour=YEAR, group=YEAR)) +
+
+			scale_x_discrete(limits=1:12) +
+			ggtitle(sprintf("Total diffused irradiance per month in each year %s", dataInterval)) +
+			xlab("Month") + ylab("Irradiance")
+
+			print(p)
+			png(paste(outputDir, 'totalByMonthInYears-diffused.png', sep="/"), width=800, height=600, res=120)
+			print(p)
+			dev.off()
+		}
+
 		# print to files
-	write.csv(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
-	write.csv(sumByMonth, paste(outputDir, 'totalByMonth.csv', sep="/"))
-	write.csv(otherData, paste(outputDir, 'otherData.csv', sep="/"))
+		write.csv(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
+		write.csv(sumByMonth, paste(outputDir, 'totalByMonth.csv', sep="/"))
+		write.csv(sumByMonthInYears, paste(outputDir, 'totalByMonthInYears.csv', sep="/"))
+		write.csv(otherData, paste(outputDir, 'otherData.csv', sep="/"))
 	}
 }
