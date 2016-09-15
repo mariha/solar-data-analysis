@@ -1,0 +1,35 @@
+#
+# Test data extracted from produkt_strahlung_Stundenwerte_19810101_20160630_00183.txt
+# The data includes:
+#   - entries for more than one year (1986 and 1987) to test table pivot
+#   - missing entries (useful when dataset will not cover full years)
+#   - entries with different values, including some missing values, marked with -999
+#   - entries on borders of day, month and year
+#
+
+STATIONS_ID; MESS_DATUM; QUALITAETS_NIVEAU; SONNENSCHEINDAUER;DIFFUS_HIMMEL_KW_J;GLOBAL_KW_J;ATMOSPHAERE_LW_J;SONNENZENIT;MESS_DATUM_WOZ;eor
+      183;1985123123:09;   1;   0;    0.0;    0.0;   -999;   147.87;1986010100:00;eor
+      183;1986010100:09;   1;   0;    0.0;    0.0;   -999;   147.87;1986010101:00;eor
+# @see 1987 year
+      183;1986021711:20;   1;   0;   31.0;   31.0;   -999;    66.99;1986021712:00;eor
+# end of day: time conversion from 0..23 to 24,1..23
+      183;1986030322:09;   1;   0;    0.0;    0.0;   -999;   117.00;1986030323:00;eor
+      183;1986030323:09;   1;   0;    0.0;    0.0;   -999;   119.52;1986030400:00;eor
+# non zero measurements
+      183;1986040411:09;   1;   0;  140.0;  161.0;   -999;    49.39;1986040412:00;eor
+      183;1986040412:09;   1;   0;  140.0;  159.0;   -999;    49.37;1986040413:00;eor
+# end of year and new year
+      183;1986123122:09;   1;   0;    0.0;    0.0;   -999;   144.21;1986123123:00;eor
+      183;1986123123:09;   1;   0;    0.0;    0.0;   -999;   147.89;1987010100:00;eor
+      183;1987010100:09;   1;   0;    0.0;    0.0;   -999;   147.89;1987010101:00;eor
+# invalid measurement (missing value)
+      183;1987021711:20;   1;   0;   -999;   -999;   -999;    67.07;1987021712:00;eor
+# @see 1986 year
+	  183;1987030322:09;   1;   0;    0.0;    0.0;   -999;   117.09;1987030323:00;eor
+      183;1987030323:09;   1;   0;    0.0;    0.0;   -999;   119.61;1987030400:00;eor
+# @see 1986 year
+      183;1987040411:09;   1;  36;  106.0;  162.0;   -999;    49.48;1987040412:00;eor
+# missing data (for 1987040413:00)
+
+      183;1987123122:09;   1;   0;    0.0;    0.0;   -999;   144.22;1987123123:00;eor
+      183;1987123123:09;   1;   0;    0.0;    0.0;   -999;   147.91;1988010100:00;eor
