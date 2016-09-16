@@ -29,123 +29,114 @@ i <- 0L
 
 # TEST: compare function
 
-inData <- readSingleFile("tests/sample.in.txt")
-actualOutData <- inData
-expectedOutData <- inData
-# make test failure
-#expectedOutData$STATIONS_ID[1] <- 666
+	inData <- readSingleFile("tests/sample.in.txt")
+	actualOutData <- inData
+	expectedOutData <- inData
+	# make test failure
+	#expectedOutData$STATIONS_ID[1] <- 666
 
 results[i<-i+1] <- compare("comparison", actualOutData, expectedOutData)
 
 # TEST: diffused irradiance table
 
-inData <- readSingleFile("tests/sample.in.txt")
-irradianceTable <- extractIrradianceData(inData)
-actualOutData <- pivotByYear(irradianceTable, "DIFFUSED")
-expectedOutData <- readSingleFile("tests/sample.out_diffused.txt")
+	inData <- readSingleFile("tests/sample.in.txt")
+	irradianceTable <- extractIrradianceData(inData)
+	actualOutData <- pivotByYear(irradianceTable, "DIFFUSED")
+	expectedOutData <- readSingleFile("tests/sample.out_diffused.txt")
 
-results[i<-i+1] <- compare("diffused irradiance", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("diffused irradiance", actualOutData, expectedOutData)
 
 # TEST: global irradiance table
 
-inData <- readSingleFile("tests/sample.in.txt")
-actualOutData <- pivotByYear(extractIrradianceData(inData), "GLOBAL")
-expectedOutData <- readSingleFile("tests/sample.out_global.txt")
+	inData <- readSingleFile("tests/sample.in.txt")
+	actualOutData <- pivotByYear(extractIrradianceData(inData), "GLOBAL")
+	expectedOutData <- readSingleFile("tests/sample.out_global.txt")
 
-results[i<-i+1] <- compare("global irradiance", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("global irradiance", actualOutData, expectedOutData)
 
 # TEST: direct irradiance table
 
-inData <- readSingleFile("tests/sample.in.txt")
-actualOutData <- pivotByYear(extractIrradianceData(inData), "DIRECT")
-expectedOutData <- readSingleFile("tests/sample.out_direct.txt")
+	inData <- readSingleFile("tests/sample.in.txt")
+	actualOutData <- pivotByYear(extractIrradianceData(inData), "DIRECT")
+	expectedOutData <- readSingleFile("tests/sample.out_direct.txt")
 
-results[i<-i+1] <- compare("direct irradiance", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("direct irradiance", actualOutData, expectedOutData)
 
 # TEST: other data extraction
 
-inData <- readSingleFile("tests/sample.in.txt")
-actualOutData <- extractOtherData(inData)
-expectedOutData <- readSingleFile("tests/sample.out_other_data.txt", colClasses = c("integer", "Date", "Date"))
+	inData <- readSingleFile("tests/sample.in.txt")
+	actualOutData <- extractOtherData(inData)
+	expectedOutData <- readSingleFile("tests/sample.out_other_data.txt", colClasses = c("integer", "Date", "Date"))
 
-results[i<-i+1] <- compare("other data", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("other data", actualOutData, expectedOutData)
 
 # TEST: in leap year 29th of February is skipped
 
-inData <- readSingleFile("tests/sampleLeapYear.in.txt")
-irradiance <- extractIrradianceData(inData)
+	inData <- readSingleFile("tests/sampleLeapYear.in.txt")
+	irradiance <- extractIrradianceData(inData)
 
-# todo: leap year
-#	avgsByHourInYear <- averageByHourInYear(irradiance)
-#	avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
-sumByMonth <- totalByMonth(irradiance)
-#	write.csv2(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
+	# todo: improve leap year test
+	actualOutData <- totalByMonth(irradiance)
+	expectedOutData <- readSingleFile("tests/sample.out_leapYear.txt")
 
-#	actualOutData <- avgsByHourInYear
-actualOutData <- sumByMonth
-expectedOutData <- readSingleFile("tests/sample.out_leapYear.txt")
-
-results[i<-i+1] <- compare("leap year", actualOutData, expectedOutData)
-
-# TEST: time shift
-# todo: time shift
+	results[i<-i+1] <- compare("leap year", actualOutData, expectedOutData)
 
 # TEST: average irradiance for each hour in year
 
-inData <- readSingleFile("tests/sample.in.txt")
-irradiance <- extractIrradianceData(inData)
+	inData <- readSingleFile("tests/sample.in.txt")
+	irradiance <- extractIrradianceData(inData)
 
-avgsByHourInYear <- averageByHourInYear(irradiance)
+	avgsByHourInYear <- averageByHourInYear(irradiance)
 
-actualOutData <- avgsByHourInYear
-expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
+	actualOutData <- avgsByHourInYear
+	expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
 
-results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
 
 # TEST: average irradiance for each hour of the day in month
 
-inData <- readSingleFile("tests/sample.in.txt")
-irradiance <- extractIrradianceData(inData)
+	inData <- readSingleFile("tests/sample.in.txt")
+	irradiance <- extractIrradianceData(inData)
 
-avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
-print(avgsByHourOfDayAndMonth)
-# todo: test
+	avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
+	# todo: test
+	#print(avgsByHourOfDayAndMonth)
 
-# actualOutData <- avgsByHourOfDayAndMonth
-# expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
+	# actualOutData <- avgsByHourOfDayAndMonth
+	# expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
 
-# results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
+	# results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
 
 # TEST: total irradiance for each month
 
-inData <- readSingleFile("tests/sample.in.txt")
-irradiance <- extractIrradianceData(inData)
+	inData <- readSingleFile("tests/sample.in.txt")
+	irradiance <- extractIrradianceData(inData)
 
-sumByMonth <- totalByMonth(irradiance)
-print(sumByMonth)
-# todo: test
+	sumByMonth <- totalByMonth(irradiance)
+	# todo: test
+	#print(sumByMonth)
 
-# actualOutData <- sumByMonth
-# expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
+	# actualOutData <- sumByMonth
+	# expectedOutData <- readSingleFile("tests/sample.out_avgs_by_hour.txt")
 
-# results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
+	# results[i<-i+1] <- compare("average irradiance for each hour in year", actualOutData, expectedOutData)
 
 # TEST: total irradiance for each month in each year
 
-inData <- readSingleFile("tests/sample.in.txt")
-irradiance <- extractIrradianceData(inData)
+	inData <- readSingleFile("tests/sample.in.txt")
+	irradiance <- extractIrradianceData(inData)
 
-sumByMonthInYears <- totalByMonthInYears(irradiance)
+	sumByMonthInYears <- totalByMonthInYears(irradiance)
 
-actualOutData <- sumByMonthInYears
-expectedOutData <- readSingleFile("tests/sample.out_sums_by_month_in_years.txt")
+	actualOutData <- sumByMonthInYears
+	expectedOutData <- readSingleFile("tests/sample.out_sums_by_month_in_years.txt")
 
-results[i<-i+1] <- compare("total irradiance for each month in each year", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("total irradiance for each month in each year", actualOutData, expectedOutData)
 
 #------------------------------------------------------------------------------
 
 print("")
-if (length(results) == 0L) {
+if (length(results) == 0) {
 	print("ALL TESTS PASSED")
 } else {
 	print("FAILED TESTS:")
