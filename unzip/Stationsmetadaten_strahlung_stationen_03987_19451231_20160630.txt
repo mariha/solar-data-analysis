@@ -1,0 +1,4 @@
+Stations_id; Stationshoehe; Geogr.Breite; Geogr.Laenge; von_datum; bis_datum; Stationsname;                                                                                                             
+  3987;   81; 52.3822; 13.0622;19460101;19661231;Potsdam                                                                                                                                                
+  3987;   81; 52.3822; 13.0622;19670101;19841231;Potsdam                                                                                                                                                
+  3987;   81; 52.3813; 13.0622;19850101;        ;Potsdam                                                                                                                                                
