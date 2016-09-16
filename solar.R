@@ -6,6 +6,13 @@ library(reshape)
 library(ggplot2)
 library(lubridate)
 
+#------------------------------------------------------------------------------
+
+INPUT_DIR <- "database"
+UNZIP_DIR <- "unzip"
+OUTPUT_DIR <- "output"
+
+#------------------------------------------------------------------------------
 
 # pivots the table so that years are in columns
 pivotByYear <- function(irradianceTable, valueColumnName) {
@@ -51,7 +58,7 @@ totalByMonthAndYear <- function(irradiance) {
 	# sum by month and year
 	sumByMonthAndYear <- aggregate(cbind(DIFFUSED,DIRECT) ~ MONTH + YEAR, data = irradiance, FUN = sum)
 
-	# transform DIFFUSED and DIRECT columns into IRRADIANCE [type] and [irradiance] value columns
+	# transform DIFFUSED and DIRECT columns into IRRADIANCE [type] and VALUE columns
 	sumByMonthAndYear <- melt(sumByMonthAndYear, measure.vars=c("DIFFUSED","DIRECT"), variable_name="IRRADIANCE")
 }
 
@@ -64,6 +71,7 @@ totalByMonthInYears <- function(irradiance) {
 	# sort by month and irradiance type
 	sumByMonthInYears <- sumByMonthInYears[ order(sumByMonthInYears$MONTH, sumByMonthInYears$IRRADIANCE), ]
 }
+
 
 extractIrradianceData <- function(inData) {
 	dateTimes <- as.POSIXlt(strptime(inData$MESS_DATUM_WOZ, format='%Y%m%d%H:%M')) # 2016063023:00
@@ -118,29 +126,32 @@ unzipFiles <- function(sourceDirectory, destDirectory) {
 
 #-----------------
 
-calculateIrradiance <- function(path, plotData) {
-	# unzip all files
-	unzipFiles(paste(path,'database', sep="/"), "./unzip")
+calculateIrradiance <- function(workingDir = ".", dataFilePattern = "produkt_.*\\.txt$", unzipData = TRUE, plotData = TRUE) {
 
-	# list all data files
-	# files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*\\.txt$", full.names=TRUE, recursive=FALSE)
-	files <- list.files(path=paste(path,'unzip', sep="/"), pattern="produkt_.*03987\\.txt$", full.names=TRUE, recursive=FALSE)  # Berlin
+	if (unzipData) {
+		unzipFiles(file.path(workingDir,INPUT_DIR), file.path(workingDir,UNZIP_DIR))
+	}
 
-	for (fileName in files) {
+	dataFiles <- list.files(path=file.path(workingDir,UNZIP_DIR), pattern=dataFilePattern, full.names=TRUE, recursive=FALSE)
 
-		inData <- readSingleFile(fileName)
+	for (dataFile in dataFiles) {
+
+		inData <- readSingleFile(dataFile)
 		irradiance <- extractIrradianceData(inData)
 		otherData <- extractOtherData(inData)
 
 		dataInterval <- sprintf("(%s to %s)", format(otherData$FIRST_DATE), format(otherData$LAST_DATE))
-		outputDir <- paste(".", "output", paste(otherData$STATION, dataInterval), sep="/")
-		dir.create(outputDir, recursive = TRUE)
+		outputDir <- file.path(workingDir, OUTPUT_DIR, paste(otherData$STATION, dataInterval))
+		if (!dir.exists(outputDir)) {
+			dir.create(outputDir, recursive = TRUE)
+		}
 
 		# average irradiance for each day in year
 		# avgsByDayInYear <- averageByDayInYear(irradiance)
 
 		# average irradiance for each hour of the day in month		
 		avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
+		write.csv(avgsByHourOfDayAndMonth, file.path(outputDir, "avgsByHourOfDayAndMonth.csv"))
 		if (plotData) {
 			p <- ggplot(avgsByHourOfDayAndMonth, aes(x=HOUR_IN_DAY)) +
 
@@ -155,13 +166,14 @@ calculateIrradiance <- function(path, plotData) {
 					ggtitle(sprintf("Avg by hour of the day in each month %s", dataInterval)) +
 					xlab("Hour") + ylab("Irradiance")
 
-			png(paste(outputDir, 'avgsByHourOfDayAndMonth.png', sep="/"), width=1200, height=800, res=120)
+			png(file.path(outputDir, "avgsByHourOfDayAndMonth.png"), width=1200, height=800, res=120)
 			print(p)
 			dev.off()
 		}
 
 		# total irradiance for each month
 		sumByMonth <- totalByMonth(irradiance)
+		write.csv(sumByMonth, file.path(outputDir, "totalByMonth.csv"))
 		if (plotData) {
 			p <- ggplot(sumByMonth, aes(x=MONTH)) +
 
@@ -175,17 +187,19 @@ calculateIrradiance <- function(path, plotData) {
 					ggtitle(sprintf("Total irradiance per month %s", dataInterval)) +
 					xlab("Month") + ylab("Irradiance")
 
-			png(paste(outputDir, 'totalByMonth.png', sep="/"), width=800, height=600, res=120)
+			png(file.path(outputDir, "totalByMonth.png"), width=800, height=600, res=120)
 			print(p)
 			dev.off()
 		}
 
 		# average irradiance for each month in each year
 		sumByMonthInYears <- totalByMonthInYears(irradiance)
+		write.csv(sumByMonthInYears, file.path(outputDir, "totalByMonthInYears.csv"))
 		if (plotData) {
 			sumByMonthAndYear <- totalByMonthAndYear(irradiance)
+			# avarage in every 5 years
 			#sumByMonthAndYear$YEAR <- sumByMonthAndYear$YEAR %/% 5 * 5
-			sumByMonthAndYear <- aggregate(value ~ IRRADIANCE + MONTH + YEAR, data = sumByMonthAndYear, FUN = mean)
+			#sumByMonthAndYear <- aggregate(value ~ IRRADIANCE + MONTH + YEAR, data = sumByMonthAndYear, FUN = mean)
 			sumByMonthAndYear <- subset(sumByMonthAndYear, IRRADIANCE=="DIFFUSED")
 
 			p <- ggplot(sumByMonthAndYear, aes(x=MONTH)) +
@@ -196,16 +210,12 @@ calculateIrradiance <- function(path, plotData) {
 					ggtitle(sprintf("Total diffused irradiance per month in each year %s", dataInterval)) +
 					xlab("Month") + ylab("Irradiance")
 
-			print(p)
-			png(paste(outputDir, 'totalByMonthInYears-diffused.png', sep="/"), width=800, height=600, res=120)
+			#print(p)
+			png(file.path(outputDir, "totalByMonthInYears-diffused.png"), width=800, height=600, res=120)
 			print(p)
 			dev.off()
 		}
 
-		# print to files
-		write.csv(avgsByHourOfDayAndMonth, paste(outputDir, 'avgsByHourOfDayAndMonth.csv', sep="/"))
-		write.csv(sumByMonth, paste(outputDir, 'totalByMonth.csv', sep="/"))
-		write.csv(sumByMonthInYears, paste(outputDir, 'totalByMonthInYears.csv', sep="/"))
-		write.csv(otherData, paste(outputDir, 'otherData.csv', sep="/"))
+		write.csv(otherData, file.path(outputDir, "otherData.csv"))
 	}
 }
