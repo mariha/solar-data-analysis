@@ -24,7 +24,7 @@ pivotByYear <- function(irradianceTable, valueColumnName) {
 averageByHourInYear <- function(irradiance) {
 
 	avgsByHourInYear <- aggregate(
-				cbind(DIFFUSED,DIRECT) ~ HOUR_IN_YEAR + MONTH + HOUR_IN_DAY,
+				cbind(DIFFUSED, DIRECT, GLOBAL) ~ HOUR_IN_YEAR + MONTH + HOUR_IN_DAY,
 				data = irradiance, FUN = mean)
 
 	avgsByHourInYear <- avgsByHourInYear[ order(avgsByHourInYear$HOUR_IN_YEAR), ]
@@ -73,7 +73,7 @@ totalByMonthInYears <- function(irradiance) {
 }
 
 
-extractIrradianceData <- function(inData) {
+extractIrradianceData <- function(inData, skip29thFeb = TRUE) {
 	dateTimes <- as.POSIXlt(strptime(inData$MESS_DATUM_WOZ, format='%Y%m%d%H:%M')) # 2016063023:00
 
 	irradiance <- data.frame(
@@ -88,13 +88,18 @@ extractIrradianceData <- function(inData) {
 
 	irradiance$DIRECT <- irradiance$GLOBAL - irradiance$DIFFUSED
 
-	# filter out 29th of Feb for leap years
-	irradiance <- subset(irradiance, !(MONTH == 2 & mday == 29))
+	if (skip29thFeb) {
+		# filter out 29th of Feb for leap years
+		irradiance <- subset(irradiance, !(MONTH == 2 & mday == 29))
 
-	# shift yday by 1 after removing 29th of Feb
-	years <- unique(dateTimes$year)
-	leapYears <- 1900 + years[leap_year(years)]
-	irradiance$yday <- irradiance$yday - (irradiance$YEAR %in% leapYears & irradiance$MONTH > 2)
+		# shift yday by 1 after removing 29th of Feb
+		years <- unique(dateTimes$year)
+		leapYears <- 1900 + years[leap_year(years)]
+		irradiance$yday <- irradiance$yday - (irradiance$YEAR %in% leapYears & irradiance$MONTH > 2)
+	} else {
+		# filter out 31st of Dec for leap years (366th day of year)
+		irradiance <- subset(irradiance, yday < 365)
+	}
 
 	irradiance$HOUR_IN_YEAR <- irradiance$yday*24 + irradiance$HOUR_IN_DAY+1   # yday is 0-based
 
@@ -137,7 +142,7 @@ calculateIrradiance <- function(workingDir = ".", dataFilePattern = "produkt_.*\
 	for (dataFile in dataFiles) {
 
 		inData <- readSingleFile(dataFile)
-		irradiance <- extractIrradianceData(inData)
+		irradiance <- extractIrradianceData(inData)#, skip29thFeb=FALSE)
 		otherData <- extractOtherData(inData)
 
 		dataInterval <- sprintf("(%s to %s)", format(otherData$FIRST_DATE), format(otherData$LAST_DATE))
@@ -146,10 +151,11 @@ calculateIrradiance <- function(workingDir = ".", dataFilePattern = "produkt_.*\
 			dir.create(outputDir, recursive = TRUE)
 		}
 
-		# average irradiance for each day in year
-		# avgsByDayInYear <- averageByDayInYear(irradiance)
+		# average irradiance for each hour in year
+		#avgsByHourInYear <- averageByHourInYear(irradiance)
+		#write.csv(avgsByHourInYear, file.path(outputDir, "avgsByHourOfYear.csv"))
 
-		# average irradiance for each hour of the day in month		
+		# average irradiance for each hour of the day in month
 		avgsByHourOfDayAndMonth <- averageByHourOfDayAndMonth(irradiance)
 		write.csv(avgsByHourOfDayAndMonth, file.path(outputDir, "avgsByHourOfDayAndMonth.csv"))
 		if (plotData) {

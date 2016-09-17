@@ -84,7 +84,7 @@ results[i<-i+1] <- compare("comparison", actualOutData, expectedOutData)
 # TEST: average irradiance for each hour in year
 
 	inData <- readSingleFile("tests/sample.in.txt")
-	irradiance <- extractIrradianceData(inData)
+	irradiance <- extractIrradianceData(inData, skip29thFeb=FALSE)
 
 	avgsByHourInYear <- averageByHourInYear(irradiance)
 
