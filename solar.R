@@ -215,7 +215,5 @@ calculateIrradiance <- function(workingDir = ".", dataFilePattern = "produkt_.*\
 			print(p)
 			dev.off()
 		}
-
-		write.csv(otherData, file.path(outputDir, "otherData.csv"))
 	}
 }
