@@ -1,7 +1,7 @@
 solar-data-analysis
 ===================
 
-Data source: ftp://ftp-cdc.dwd.de/pub/CDC/observations_germany/climate/hourly/solar/
+Data source: ftp://ftp-cdc.dwd.de/pub/CDC/observations_germany/climate/hourly/solar
 Source code: https://github.com/marycha/solar-data-analysis
 
 Sample input and output data for Potsdam (Berlin) station is committed together with the source code.
