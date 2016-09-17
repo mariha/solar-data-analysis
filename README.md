@@ -4,6 +4,8 @@ solar-data-analysis
 Data source: ftp://ftp-cdc.dwd.de/pub/CDC/observations_germany/climate/hourly/solar/
 Source code: https://github.com/marycha/solar-data-analysis
 
+Sample input and output data for Potsdam (Berlin) station is committed together with the source code.
+
 
 Program structure
 -----------------
@@ -20,7 +22,7 @@ To run the program:
 -------------------
 1. Install R: https://www.r-project.org/
 1. Clone or download the code from GitHub repository to your working directory `.`
-1. Save zip files from datasource to `./database`
+1. Save zip files from datasource to `./database` (or use sample Potsdam data)
 1. Open R console and set working directory (it should contain `solar.R`, `run.R` and `test.R` scripts)
 
         setwd("path/to/your/working/directory")
