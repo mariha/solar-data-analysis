@@ -104,6 +104,9 @@ extractIrradianceData <- function(inData, skip29thFeb = TRUE) {
 		irradiance$yday <- irradiance$yday - (irradiance$YEAR %in% leapYears & irradiance$MONTH > 2)
 	}
 
+	# bug in R... computes yday for 2000 year as if it was leap
+	irradiance$yday <- irradiance$yday - (irradiance$YEAR == 2000 & irradiance$MONTH > 2)
+
 	irradiance$HOUR_IN_YEAR <- irradiance$yday*24 + irradiance$HOUR_IN_DAY+1   # yday is 0-based
 
 	result <- subset(irradiance, select=-c(mday, yday))
@@ -224,10 +227,6 @@ calculateIrradiance <- function(workingDir = ".", dataFilePattern = "produkt_.*\
 		# average irradiance for each hour in year
 		avgsByHourInYear <- averageByHourInYear(irradiance)
 		write.csv(avgsByHourInYear, file.path(outputDir, "avgsByHourOfYear-skip29thFeb.csv"))
-
-		irradiance <- extractIrradianceData(inData, skip29thFeb=FALSE)
-		avgsByHourInYear <- averageByHourInYear(subset(irradiance, HOUR_IN_YEAR <= 365*24), includeMonth=FALSE)
-		write.csv(avgsByHourInYear, file.path(outputDir, "avgsByHourOfYear-skip366thDay-noMonth.csv"))
 
 		avgsByHourInYear <- averageByHourInYear(irradiance, includeMonth=FALSE)
 		write.csv(avgsByHourInYear, file.path(outputDir, "avgsByHourOfYear-noSkip-noMonth.csv"))

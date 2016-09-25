@@ -1,0 +1,13 @@
+#
+# Test data extracted from produkt_strahlung_Stundenwerte_19810101_20160630_00183.txt
+#
+# The tests exercises bug found in R library.
+# For dates converted with as.POSIXlt yday was computed as if 2000 was a leap year.
+#
+
+STATIONS_ID; MESS_DATUM; QUALITAETS_NIVEAU; SONNENSCHEINDAUER;DIFFUS_HIMMEL_KW_J;GLOBAL_KW_J;ATMOSPHAERE_LW_J;SONNENZENIT;MESS_DATUM_WOZ;eor
+     3987;2000033023:11;   1;   0;    0.0;    1.0;   -999;   123.09;2000033100:00;eor
+     3987;2000033123:11;   1;   0;    0.0;    2.0;   -999;   122.70;2000040100:00;eor
+
+     3987;2001033023:12;   1;   0;    0.0;    3.0;   -999;   123.18;2001033100:00;eor
+     3987;2001033123:11;   1;   0;    0.0;    4.0;   -999;   122.80;2001040100:00;eor
