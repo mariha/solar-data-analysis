@@ -75,8 +75,7 @@ results[i<-i+1] <- compare("comparison", actualOutData, expectedOutData)
 	inData <- readSingleFile("tests/sampleLeapYear.in.txt")
 	irradiance <- extractIrradianceData(inData)
 
-	# todo: improve leap year test
-	actualOutData <- totalByMonth(irradiance)
+	actualOutData <- averageByHourInYear(irradiance)
 	expectedOutData <- readSingleFile("tests/sample.out_leapYear.txt")
 
 	results[i<-i+1] <- compare("leap year", actualOutData, expectedOutData)
@@ -140,7 +139,7 @@ if (length(results) == 0) {
 	print("ALL TESTS PASSED")
 } else {
 	print("FAILED TESTS:")
-print(results)
+	print(results)
 }
 
 #------------------------------------------------------------------------------
