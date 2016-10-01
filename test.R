@@ -88,7 +88,7 @@ results[i<-i+1] <- compare("comparison", actualOutData, expectedOutData)
 	actualOutData <- averageByHourInYear(irradiance)
 	expectedOutData <- readSingleFile("tests/sample_2000yearBug.out.txt")
 
-	results[i<-i+1] <- compare("bug in R library when getting yday for 2000 year", actualOutData, expectedOutData)
+	results[i<-i+1] <- compare("shift hours and days of a year correctly (2000 year)", actualOutData, expectedOutData)
 
 # TEST: average irradiance for each hour in year
 

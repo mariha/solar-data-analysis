@@ -1,8 +1,8 @@
 #
 # Test data extracted from produkt_strahlung_Stundenwerte_19810101_20160630_00183.txt
 #
-# The tests exercises bug found in R library.
-# For dates converted with as.POSIXlt yday was computed as if 2000 was a leap year.
+# The test verifies that for two years: one leap and another normal,
+# when we skip 29th of Feb, we shift days and hours of a year correctly.
 #
 
 STATIONS_ID; MESS_DATUM; QUALITAETS_NIVEAU; SONNENSCHEINDAUER;DIFFUS_HIMMEL_KW_J;GLOBAL_KW_J;ATMOSPHAERE_LW_J;SONNENZENIT;MESS_DATUM_WOZ;eor

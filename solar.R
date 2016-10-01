@@ -99,13 +99,10 @@ extractIrradianceData <- function(inData, skip29thFeb = TRUE) {
 		irradiance <- subset(irradiance, !(MONTH == 2 & mday == 29))
 
 		# shift yday by 1 after removing 29th of Feb
-		years <- unique(dateTimes$year)
-		leapYears <- 1900 + years[leap_year(years)]
+		years <- 1900 + unique(dateTimes$year)
+		leapYears <- years[leap_year(years)]
 		irradiance$yday <- irradiance$yday - (irradiance$YEAR %in% leapYears & irradiance$MONTH > 2)
 	}
-
-	# bug in R... computes yday for 2000 year as if it was leap
-	irradiance$yday <- irradiance$yday - (irradiance$YEAR == 2000 & irradiance$MONTH > 2)
 
 	irradiance$HOUR_IN_YEAR <- irradiance$yday*24 + irradiance$HOUR_IN_DAY+1   # yday is 0-based
 
