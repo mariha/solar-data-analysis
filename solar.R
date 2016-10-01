@@ -228,6 +228,7 @@ calculateIrradiance <- function(workingDir = ".", dataFilePattern = "produkt_.*\
 		avgsByHourInYear <- averageByHourInYear(irradiance)
 		write.csv(avgsByHourInYear, file.path(outputDir, "avgsByHourOfYear-skip29thFeb.csv"))
 
+		irradiance <- extractIrradianceData(inData, skip29thFeb = FALSE)
 		avgsByHourInYear <- averageByHourInYear(irradiance, includeMonth=FALSE)
 		write.csv(avgsByHourInYear, file.path(outputDir, "avgsByHourOfYear-noSkip-noMonth.csv"))
 	}
