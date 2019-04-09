@@ -1,11 +1,13 @@
 solar-data-analysis
 ===================
 
+General measurement method of an average sunlight power at a given location. The method is used to improve low-energy houses built by [Dworek Polski](www.dworekpolski.pl).
+
 Data source: ftp://ftp-cdc.dwd.de/pub/CDC/observations_germany/climate/hourly/solar
 
 Source code: https://github.com/marycha/solar-data-analysis
 
-Sample input and output data for Potsdam (Berlin) station is committed together with the source code.
+Sample input and output data for Potsdam (Berlin) station is kept together with the source code.
 
 
 Program structure
