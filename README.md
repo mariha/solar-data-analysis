@@ -1,4 +1,4 @@
-solar-data-analysis
+Solar data analysis
 ===================
 
 General measurement method of an average sunlight power at a given location. The method is used to improve low-energy houses built by [Dworek Polski](www.dworekpolski.pl).
